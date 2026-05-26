@@ -17,8 +17,8 @@ const JOURNEY = [
 export function MiniJourneyTracker({ stageIndex, success = false }: { stageIndex: number; success?: boolean }) {
   const tone = success ? "success" : "primary";
   return (
-    <div className="mt-4 rounded-xl border border-border/60 bg-surface/40 px-2.5 py-2">
-      <div className="mb-1.5 flex items-center justify-between">
+    <div className="mt-3 rounded-xl border border-border/60 bg-surface/40 px-2.5 py-1.5">
+      <div className="mb-1 flex items-center justify-between">
         <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Bill Journey</span>
         <span className={cn("text-[9.5px] font-extrabold uppercase tracking-wider", tone === "success" ? "text-success" : "text-primary")}>
           {JOURNEY[Math.min(stageIndex, JOURNEY.length - 1)].label}
@@ -101,7 +101,7 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
   const hasHeat = issue.urgency === "critical" || (issue.momentum ?? 0) >= 400;
 
   return (
-    <article className={cn("fade-up group relative overflow-hidden rounded-2xl border bg-gradient-card p-6 shadow-card transition-all duration-300 hover:border-primary/35 hover:-translate-y-[1px] hover:shadow-[0_18px_44px_-24px_oklch(0.79_0.13_230/30%)] active:scale-[0.995] cursor-pointer", hasHeat ? "border-border/70 shadow-[0_1px_0_0_oklch(1_0_0/4%)_inset,0_18px_40px_-24px_oklch(0.66_0.23_25/35%)]" : "border-border/70", phase === "done" && "opacity-95 cursor-default")}>
+    <article className={cn("fade-up group relative overflow-hidden rounded-2xl border bg-gradient-card p-5 shadow-card transition-all duration-300 hover:border-primary/35 hover:-translate-y-[1px] hover:shadow-[0_18px_44px_-24px_oklch(0.79_0.13_230/30%)] active:scale-[0.995] cursor-pointer", hasHeat ? "border-border/70 shadow-[0_1px_0_0_oklch(1_0_0/4%)_inset,0_18px_40px_-24px_oklch(0.66_0.23_25/35%)]" : "border-border/70", phase === "done" && "opacity-95 cursor-default")}>
       <style>{POP_KEYFRAMES}</style>
 
       {/* Top header */}
@@ -124,18 +124,18 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         </div>
       </header>
 
-      <div className="mt-2 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/75">
+      <div className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/75">
         <MapPin className="h-2.5 w-2.5" /> {JURISDICTION_LABEL[issue.scope]}
       </div>
 
       {aiRecommended && (
-        <div className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-full border border-success/40 bg-success/[0.08] px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-success">
+        <div className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full border border-success/40 bg-success/[0.08] px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-success">
           <Sparkles className="h-2.5 w-2.5 text-success" strokeWidth={3} /> AI Recommended for You
         </div>
       )}
 
       {!aiRecommended && whyHere && (
-        <div className="mt-2 flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/[0.07] px-2.5 py-1 text-[10px] font-bold tracking-tight text-primary/90 w-fit">
+        <div className="mt-1.5 flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/[0.07] px-2.5 py-1 text-[10px] font-bold tracking-tight text-primary/90 w-fit">
           <Sparkles className="h-2.5 w-2.5" strokeWidth={3} />
           <span className="uppercase tracking-wider text-[9px] text-primary/70">Why this is here</span>
           <span aria-hidden className="text-primary/40">·</span>
@@ -143,10 +143,10 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         </div>
       )}
 
-      <h3 className="mt-4 text-[20px] font-bold leading-[1.25] tracking-tight text-balance text-foreground">{issue.title}</h3>
+      <h3 className="mt-3 text-[19px] font-bold leading-[1.2] tracking-tight text-balance text-foreground">{issue.title}</h3>
 
-      {/* Why it matters — COLLAPSED BY DEFAULT with (tap to expand) */}
-      <div className="mt-4">
+      {/* Why it matters — COLLAPSED BY DEFAULT */}
+      <div className="mt-3">
         <button
           type="button"
           onClick={() => setShowWhyItMatters(v => !v)}
@@ -159,16 +159,16 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         </button>
 
         {showWhyItMatters && (
-          <div className="mt-2 rounded-xl border border-primary/20 bg-primary/[0.05] px-3.5 py-2.5">
-            <p className="text-[12.5px] font-normal leading-relaxed text-foreground/85">
+          <div className="mt-1.5 rounded-xl border border-primary/20 bg-primary/[0.05] px-3 py-2">
+            <p className="text-[12px] font-normal leading-relaxed text-foreground/85">
               {issue.whyItMatters}
             </p>
           </div>
         )}
       </div>
 
-      {/* Pros & Cons — COLLAPSED BY DEFAULT (Green / Red theme + matching header style) */}
-      <div className="mt-4">
+      {/* Pros & Cons — COLLAPSED BY DEFAULT (Green / Red theme) */}
+      <div className="mt-3">
         <button
           type="button"
           onClick={() => setShowProsCons(v => !v)}
@@ -179,16 +179,16 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         </button>
 
         {showProsCons && (
-          <div className="mt-2 grid grid-cols-2 gap-2.5">
+          <div className="mt-1.5 grid grid-cols-2 gap-2">
             {/* PROS - Green */}
-            <div className="rounded-xl border border-success/40 bg-success/[0.08] px-3 py-2.5">
-              <div className="mb-1.5 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
+            <div className="rounded-xl border border-success/40 bg-success/[0.08] px-3 py-2">
+              <div className="mb-1 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
                 <Check className="h-2.5 w-2.5" strokeWidth={3.5} /> Pros
               </div>
               <ul className="space-y-1">
                 {issue.pros.slice(0, 3).map((p, i) => (
-                  <li key={i} className="flex gap-1.5 text-[11.5px] font-normal leading-[1.4] text-foreground/80">
-                    <span className="mt-[6px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-success" />
+                  <li key={i} className="flex gap-1.5 text-[11px] font-normal leading-[1.35] text-foreground/80">
+                    <span className="mt-[5px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-success" />
                     <span>{p}</span>
                   </li>
                 ))}
@@ -196,14 +196,14 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
             </div>
 
             {/* CONS - Red */}
-            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.08] px-3 py-2.5">
-              <div className="mb-1.5 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-destructive">
+            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.08] px-3 py-2">
+              <div className="mb-1 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-destructive">
                 <X className="h-2.5 w-2.5" strokeWidth={3.5} /> Cons
               </div>
               <ul className="space-y-1">
                 {issue.cons.slice(0, 3).map((c, i) => (
-                  <li key={i} className="flex gap-1.5 text-[11.5px] font-normal leading-[1.4] text-foreground/80">
-                    <span className="mt-[6px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-destructive" />
+                  <li key={i} className="flex gap-1.5 text-[11px] font-normal leading-[1.35] text-foreground/80">
+                    <span className="mt-[5px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-destructive" />
                     <span>{c}</span>
                   </li>
                 ))}
@@ -213,36 +213,36 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         )}
       </div>
 
-      <div className="mt-5 h-px bg-gradient-to-r from-transparent via-border/70 to-transparent" />
+      <div className="mt-4 h-px bg-gradient-to-r from-transparent via-border/70 to-transparent" />
 
-      {/* Momentum & social proof */}
-      <div className="mt-5 flex flex-wrap items-center gap-1.5">
-        <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-2.5 py-1 text-[10.5px] font-bold text-primary ring-1 ring-primary/25">
+      {/* Momentum & social proof - tighter */}
+      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-2.5 py-1 text-[10px] font-bold text-primary ring-1 ring-primary/25">
           <Users className="h-2.5 w-2.5" strokeWidth={3} /> {yesNeighborPct}% of neighbors in your district feel this too
         </span>
         {issue.momentumText && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-surface/70 px-2.5 py-1 text-[10.5px] font-semibold text-muted-foreground ring-1 ring-border/50">
+          <span className="inline-flex items-center gap-1 rounded-full bg-surface/70 px-2 py-0.5 text-[9.5px] font-semibold text-muted-foreground ring-1 ring-border/50">
             <span className="h-1.5 w-1.5 rounded-full bg-primary/70" /> {issue.momentumText}
         </span>
         )}
       </div>
 
-      {/* Verified District Pulse - Small & Compact */}
+      {/* Verified District Pulse - Smaller & Compact */}
       <div className="relative mt-3 overflow-hidden rounded-lg border border-success/30 bg-success/[0.05] p-2">
         <div className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-success/15 ring-1 ring-success/40">
-            <ShieldCheck className="h-3 w-3 text-success" strokeWidth={3} />
+          <div className="flex h-5 w-5 items-center justify-center rounded-md bg-success/15 ring-1 ring-success/40">
+            <ShieldCheck className="h-2.5 w-2.5 text-success" strokeWidth={3} />
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between">
-              <span className="text-[9.5px] font-extrabold uppercase tracking-wider text-success">Verified District Pulse</span>
-              <span className="text-[14px] font-extrabold text-success tabular-nums">{issue.pulse}%</span>
+              <span className="text-[9px] font-extrabold uppercase tracking-wider text-success">Verified District Pulse</span>
+              <span className="text-[13px] font-extrabold text-success tabular-nums">{issue.pulse}%</span>
             </div>
-            <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted/60 flex">
+            <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-muted/60 flex">
               <div className="bg-success" style={{ width: `${issue.pulse}%` }} />
               <div className="bg-destructive" style={{ width: `${100 - issue.pulse}%` }} />
             </div>
-            <div className="mt-0.5 flex justify-between text-[8.5px] font-semibold">
+            <div className="mt-0.5 flex justify-between text-[8px] font-semibold">
               <span className="text-success">Yes {issue.pulse}%</span>
               <span className="text-destructive">No {100 - issue.pulse}%</span>
             </div>
@@ -252,31 +252,31 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
 
       {/* Vote buttons */}
       {phase !== "done" ? (
-        <div className="mt-5 grid grid-cols-3 gap-2">
-          <button onClick={() => castVote("yes")} disabled={phase === "pop"} className={cn("relative flex h-12 flex-col items-center justify-center gap-0.5 rounded-xl text-[12.5px] font-extrabold tracking-wider transition-all duration-300 active:scale-[0.96] overflow-visible", phase === "pop" && vote === "yes" ? "bg-success !text-background ring-2 ring-success scale-[1.12] z-10" : "bg-success/15 text-success ring-1 ring-success/30 hover:bg-success/25 hover:ring-success/50 active:bg-success/35")}>
-            <Check className="h-[18px] w-[18px]" strokeWidth={3} /> YES
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <button onClick={() => castVote("yes")} disabled={phase === "pop"} className={cn("relative flex h-11 flex-col items-center justify-center gap-0.5 rounded-xl text-[12px] font-extrabold tracking-wider transition-all duration-300 active:scale-[0.96] overflow-visible", phase === "pop" && vote === "yes" ? "bg-success !text-background ring-2 ring-success scale-[1.12] z-10" : "bg-success/15 text-success ring-1 ring-success/30 hover:bg-success/25 hover:ring-success/50 active:bg-success/35")}>
+            <Check className="h-[17px] w-[17px]" strokeWidth={3} /> YES
           </button>
-          <button onClick={() => castVote("unsure")} disabled={phase === "pop"} className={cn("relative flex h-12 flex-col items-center justify-center gap-0.5 rounded-xl text-[12.5px] font-extrabold tracking-wider transition-all duration-300 active:scale-[0.96] overflow-visible", phase === "pop" && vote === "unsure" ? "bg-zinc-500 !text-background ring-2 ring-zinc-400 scale-[1.12] z-10" : "bg-surface text-muted-foreground ring-1 ring-border/60 hover:text-foreground hover:bg-accent active:bg-accent/80")}>
-            <HelpCircle className="h-[18px] w-[18px]" strokeWidth={3} /> UNSURE
+          <button onClick={() => castVote("unsure")} disabled={phase === "pop"} className={cn("relative flex h-11 flex-col items-center justify-center gap-0.5 rounded-xl text-[12px] font-extrabold tracking-wider transition-all duration-300 active:scale-[0.96] overflow-visible", phase === "pop" && vote === "unsure" ? "bg-zinc-500 !text-background ring-2 ring-zinc-400 scale-[1.12] z-10" : "bg-surface text-muted-foreground ring-1 ring-border/60 hover:text-foreground hover:bg-accent active:bg-accent/80")}>
+            <HelpCircle className="h-[17px] w-[17px]" strokeWidth={3} /> UNSURE
           </button>
-          <button onClick={() => castVote("no")} disabled={phase === "pop"} className={cn("relative flex h-12 flex-col items-center justify-center gap-0.5 rounded-xl text-[12.5px] font-extrabold tracking-wider transition-all duration-300 active:scale-[0.96] overflow-visible", phase === "pop" && vote === "no" ? "bg-destructive !text-background ring-2 ring-destructive scale-[1.12] z-10" : "bg-destructive/15 text-destructive ring-1 ring-destructive/30 hover:bg-destructive/25 hover:ring-destructive/50 active:bg-destructive/35")}>
-            <X className="h-[18px] w-[18px]" strokeWidth={3} /> NO
+          <button onClick={() => castVote("no")} disabled={phase === "pop"} className={cn("relative flex h-11 flex-col items-center justify-center gap-0.5 rounded-xl text-[12px] font-extrabold tracking-wider transition-all duration-300 active:scale-[0.96] overflow-visible", phase === "pop" && vote === "no" ? "bg-destructive !text-background ring-2 ring-destructive scale-[1.12] z-10" : "bg-destructive/15 text-destructive ring-1 ring-destructive/30 hover:bg-destructive/25 hover:ring-destructive/50 active:bg-destructive/35")}>
+            <X className="h-[17px] w-[17px]" strokeWidth={3} /> NO
           </button>
         </div>
       ) : (
-        <div className="mt-5 space-y-2.5">
-          <div className="fade-up flex items-center justify-center gap-2 rounded-xl border border-success/40 bg-success/15 px-3 py-3 text-[12.5px] font-bold text-success shadow-[0_0_24px_-8px_oklch(0.72_0.21_148/55%)]">
+        <div className="mt-4 space-y-2">
+          <div className="fade-up flex items-center justify-center gap-2 rounded-xl border border-success/40 bg-success/15 px-3 py-2.5 text-[12px] font-bold text-success shadow-[0_0_24px_-8px_oklch(0.72_0.21_148/55%)]">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-success text-background" style={{ animation: "votePop 700ms cubic-bezier(.2,1.4,.4,1) both" }}>
               <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={3} />
             </span>
             Vote Recorded
           </div>
-          <div className="flex items-center justify-between text-[11.5px] font-bold tabular-nums">
+          <div className="flex items-center justify-between text-[11px] font-bold tabular-nums">
             <span className="text-success">YES {yesPct}%</span>
             <span className="text-muted-foreground">UNSURE {Math.max(0, 100 - yesPct - noPct)}%</span>
             <span className="text-destructive">NO {noPct}%</span>
           </div>
-          <div className="flex h-2.5 overflow-hidden rounded-full bg-muted/70">
+          <div className="flex h-2 overflow-hidden rounded-full bg-muted/70">
             <div className="bg-success transition-all duration-700" style={{ width: `${yesPct}%` }} />
             <div className="bg-destructive transition-all duration-700" style={{ width: `${noPct}%` }} />
             <div className="bg-muted-foreground/40 transition-all duration-700" style={{ width: `${Math.max(0, 100 - yesPct - noPct)}%` }} />
