@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ShieldCheck, Sparkles, Check } from "lucide-react";
+import { ShieldCheck, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Issue } from "@/lib/mock-data";
 import { CATEGORY_COLORS } from "@/lib/mock-data";
@@ -196,18 +196,10 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
         </button>
       </div>
 
-      {/* ========== IMPROVED SUCCESS MESSAGE ========== */}
+      {/* Original Lovable-style simple confirmation */}
       {voted && (
-        <div className="mt-3 rounded-2xl border border-success/30 bg-success/10 p-3.5 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <div className="flex items-center justify-center gap-2 text-success">
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success/20">
-              <Check className="h-3.5 w-3.5" />
-            </div>
-            <span className="text-[13px] font-extrabold">Vote recorded & sent to your representative</span>
-          </div>
-          <p className="mt-1 text-[11.5px] text-success/85">
-            Thank you for making your voice heard.
-          </p>
+        <div className="mt-2 text-center text-[12px] font-medium text-success">
+          Your vote was recorded. Thank you.
         </div>
       )}
     </article>
