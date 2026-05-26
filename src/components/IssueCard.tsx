@@ -111,6 +111,7 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
         className="mt-2 flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/60 px-3 py-2 text-left active:bg-white/5"
       >
         <div className="flex items-center gap-2">
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
           <span className="text-[13px] font-extrabold">
             <span className="text-success">Pros</span> & <span className="text-destructive">Cons</span> <span className="text-muted-foreground">(tap to expand)</span>
           </span>
@@ -201,7 +202,7 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
         <div className="mt-3 rounded-2xl border border-success/30 bg-success/10 p-3.5 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center justify-center gap-2 text-success">
             <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success/20">
-              <Check className="h-3.5 w-3.5" />
+              <Check className="h-3.5 w-3.5 text-primary" />
             </div>
             <span className="text-[13px] font-extrabold">Vote recorded & sent to your representative</span>
           </div>
