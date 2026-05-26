@@ -223,45 +223,26 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         {issue.momentumText && (
           <span className="inline-flex items-center gap-1 rounded-full bg-surface/70 px-2.5 py-1 text-[10.5px] font-semibold text-muted-foreground ring-1 ring-border/50">
             <span className="h-1.5 w-1.5 rounded-full bg-primary/70" /> {issue.momentumText}
-          </span>
+        </span>
         )}
       </div>
 
-      {/* Verified District Pulse - Compact with Yes/No stacked bar */}
-      <div className="relative mt-4 overflow-hidden rounded-xl border border-success/30 bg-success/[0.06] p-2.5">
-        <div className="flex items-center gap-2.5">
-          <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-success/15 ring-1 ring-success/40">
-            <ShieldCheck className="h-3.5 w-3.5 text-success" strokeWidth={2.75} />
+      {/* Verified District Pulse - Small & Compact */}
+      <div className="relative mt-3 overflow-hidden rounded-lg border border-success/30 bg-success/[0.05] p-2">
+        <div className="flex items-center gap-2">
+          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-success/15 ring-1 ring-success/40">
+            <ShieldCheck className="h-3 w-3 text-success" strokeWidth={3} />
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
-                Verified District Pulse
-              </span>
-              <span className="text-[15px] font-extrabold text-success tabular-nums">
-                {issue.pulse}%
-              </span>
+          <div className="flex-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[9.5px] font-extrabold uppercase tracking-wider text-success">Verified District Pulse</span>
+              <span className="text-[14px] font-extrabold text-success tabular-nums">{issue.pulse}%</span>
             </div>
-            <p className="text-[9.5px] leading-tight text-muted-foreground/80">
-              support among verified voters in your district
-            </p>
-
-            {/* Stacked Yes / No bar */}
-            <div className="mt-2 flex h-2.5 w-full overflow-hidden rounded-full bg-muted/60">
-              {/* Green - Yes */}
-              <div 
-                className="bg-success transition-all duration-700" 
-                style={{ width: `${issue.pulse}%` }} 
-              />
-              {/* Red - No */}
-              <div 
-                className="bg-destructive transition-all duration-700" 
-                style={{ width: `${100 - issue.pulse}%` }} 
-              />
+            <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted/60 flex">
+              <div className="bg-success" style={{ width: `${issue.pulse}%` }} />
+              <div className="bg-destructive" style={{ width: `${100 - issue.pulse}%` }} />
             </div>
-
-            {/* Small labels under bar */}
-            <div className="mt-0.5 flex justify-between text-[9px] font-semibold tabular-nums">
+            <div className="mt-0.5 flex justify-between text-[8.5px] font-semibold">
               <span className="text-success">Yes {issue.pulse}%</span>
               <span className="text-destructive">No {100 - issue.pulse}%</span>
             </div>
