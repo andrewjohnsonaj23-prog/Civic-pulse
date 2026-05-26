@@ -223,25 +223,33 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         {issue.momentumText && (
           <span className="inline-flex items-center gap-1 rounded-full bg-surface/70 px-2.5 py-1 text-[10.5px] font-semibold text-muted-foreground ring-1 ring-border/50">
             <span className="h-1.5 w-1.5 rounded-full bg-primary/70" /> {issue.momentumText}
-          </span>
-        )}
+        </span>
+      )}
       </div>
 
-      {/* Verified District Pulse */}
-      <div className="relative mt-5 overflow-hidden rounded-2xl border border-success/30 bg-gradient-to-r from-success/15 via-success/[0.08] to-transparent p-3.5">
-        <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-success/20 ring-1 ring-success/40">
-            <ShieldCheck className="h-[18px] w-[18px] text-success" strokeWidth={2.5} />
-            <span aria-hidden className="absolute inset-0 rounded-xl ring-2 ring-success/35" style={{ animation: "pulseDot 2.4s ease-in-out infinite" }} />
+      {/* Verified District Pulse - Smaller */}
+      <div className="relative mt-4 overflow-hidden rounded-xl border border-success/30 bg-success/[0.06] p-2.5">
+        <div className="flex items-center gap-2.5">
+          <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-success/15 ring-1 ring-success/40">
+            <ShieldCheck className="h-3.5 w-3.5 text-success" strokeWidth={2.75} />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="flex items-baseline justify-between gap-2">
-              <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-success">Verified District Pulse</span>
-              <span className="text-[18px] font-extrabold text-success tabular-nums">{issue.pulse}%</span>
+              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
+                Verified District Pulse
+              </span>
+              <span className="text-[15px] font-extrabold text-success tabular-nums">
+                {issue.pulse}%
+              </span>
             </div>
-            <p className="text-[11px] leading-tight text-muted-foreground/85">support among verified voters in your district</p>
-            <div className="relative mt-2 h-1.5 overflow-hidden rounded-full bg-success/15">
-              <div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-success/70 via-success to-success/70 shadow-[0_0_10px_-1px_oklch(0.72_0.21_148/70%)]" style={{ width: `${issue.pulse}%` }} />
+            <p className="text-[10px] leading-tight text-muted-foreground/80">
+              support among verified voters in your district
+            </p>
+            <div className="relative mt-1.5 h-1 overflow-hidden rounded-full bg-success/15">
+              <div 
+                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-success/70 via-success to-success/70" 
+                style={{ width: `${issue.pulse}%` }} 
+              />
             </div>
           </div>
         </div>
