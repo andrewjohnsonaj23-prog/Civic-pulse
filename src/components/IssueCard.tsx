@@ -1,72 +1,30 @@
 import { useState } from "react";
-import { Check, X, HelpCircle, ShieldCheck, Clock, Flame, MapPin, CheckCircle2, Sparkles, Users, FileText, Megaphone, Landmark, Scale, Heart } from "lucide-react";
+import { Check, X, HelpCircle, ShieldCheck, Users, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Issue } from "@/lib/mock-data";
 import { CATEGORY_COLORS } from "@/lib/mock-data";
 
 type Vote = "yes" | "no" | "unsure" | null;
 
-const JOURNEY = [
-  { key: "draft", label: "Draft", Icon: FileText },
-  { key: "gathering", label: "Support", Icon: Users },
-  { key: "reps", label: "Reps", Icon: Landmark },
-  { key: "media", label: "Media", Icon: Megaphone },
-  { key: "law", label: "Law", Icon: Scale },
-] as const;
-
-export function MiniJourneyTracker({ stageIndex, success = false }: { stageIndex: number; success?: boolean }) {
-  const tone = success ? "success" : "primary";
-  return (
-    <div className="mt-4 rounded-xl border border-border/60 bg-surface/40 px-2.5 py-2">
-      <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Bill Journey</span>
-        <span className={cn("text-[9.5px] font-extrabold uppercase tracking-wider", tone === "success" ? "text-success" : "text-primary")}>
-          {JOURNEY[Math.min(stageIndex, JOURNEY.length - 1)].label}
-        </span>
-      </div>
-      <div className="flex items-center gap-1">
-        {JOURNEY.map((s, i) => {
-          const active = i <= stageIndex;
-          const isCurrent = i === stageIndex;
-          const Icon = s.Icon;
-          return (
-            <div key={i} className={cn("flex flex-1 items-center gap-1 rounded-lg px-2 py-1", active ? "bg-primary/10" : "bg-muted/40")}>
-              <div className={cn("flex h-5 w-5 items-center justify-center rounded-md", active ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground")}>
-                <Icon className="h-3 w-3" strokeWidth={2.5} />
-              </div>
-              <span className={cn("text-[9.5px] font-bold", active ? "text-primary" : "text-muted-foreground")}>{s.label}</span>
-              {isCurrent && <span className="ml-auto text-[9px] text-primary/70">•</span>}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 const URGENCY: Record<string, { label: string; cls: string }> = {
-  critical: { label: "CRITICAL", cls: "bg-destructive text-white" },
+  critical: { label: "CRITICAL", cls: "bg-destructive text-destructive-foreground" },
   high: { label: "HIGH", cls: "bg-orange-500 text-white" },
   medium: { label: "ACTIVE", cls: "bg-muted text-foreground/70 ring-1 ring-border/50" },
   low: { label: "OPEN", cls: "bg-muted text-muted-foreground ring-1 ring-border/40" },
 };
 
-export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommended, relevance, alignmentNote }: { 
+export function IssueCard({ issue, onVoted, aiRecommended = false }: { 
   issue: Issue; 
   onVoted?: () => void; 
-  trendingLabel?: "Active Discussion" | null; 
-  whyHere?: string | null; 
   aiRecommended?: boolean; 
-  relevance?: number; 
-  alignmentNote?: string | null 
 }) {
   const [vote, setVote] = useState<Vote>(null);
   const [phase, setPhase] = useState<"idle" | "pop" | "done">("idle");
-  const [saved, setSaved] = useState(false);
-  const [showProsCons, setShowProsCons] = useState(false);
   const [showWhyItMatters, setShowWhyItMatters] = useState(false);
+  const [showProsCons, setShowProsCons] = useState(false);
 
   const voted = vote !== null;
+
   const castVote = (v: Exclude<Vote, null>) => {
     setVote(v);
     setPhase("pop");
@@ -74,208 +32,91 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
     onVoted?.();
   };
 
-  const total = issue.yes + issue.no + issue.unsure + (voted ? 1 : 0);
-  const yesPct = Math.round(((issue.yes + (vote === "yes" ? 1 : 0)) / total) * 100);
-  const noPct = Math.round(((issue.no + (vote === "no" ? 1 : 0)) / total) * 100);
-  const progress = Math.min(100, Math.round((total / issue.goal) * 100));
-  const u = URGENCY[issue.urgency];
-  const catColor = CATEGORY_COLORS[issue.category] ?? "var(--color-primary)";
   const yesNeighborPct = Math.round((issue.yes / Math.max(1, issue.yes + issue.no + issue.unsure)) * 100);
-  const hasHeat = issue.urgency === "critical" || (issue.momentum ?? 0) >= 400;
+  const u = URGENCY[issue.urgency] || URGENCY.medium;
+  const catColor = CATEGORY_COLORS[issue.category] ?? "var(--color-primary)";
 
   return (
-    <article className={cn(
-      "group relative overflow-hidden rounded-3xl border border-border/60 bg-surface p-5 transition-all active:scale-[0.985]",
-      phase === "pop" && "animate-[votePop_0.55s_ease-out]"
-    )}>
-      {/* Category + Urgency header */}
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <div className="rounded-full px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-[0.14em] ring-1 ring-inset" style={{ backgroundColor: `${catColor}15`, color: catColor, borderColor: `${catColor}40` }}>
-            {issue.category}
+    <article className={cn("rounded-3xl border border-border/60 bg-surface p-4 shadow-sm transition-all", phase === "pop" && "scale-[0.985]")}>
+      
+      {/* ========== CLEAN TOP BUBBLES ========== */}
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="inline-flex items-center rounded-full px-3 py-0.5 text-[10px] font-extrabold tracking-[0.5px] text-white" style={{ backgroundColor: catColor }}>
+          {issue.category.toUpperCase()}
+        </div>
+        {issue.urgency && (
+          <div className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-extrabold tracking-wider", u.cls)}>
+            {u.label}
           </div>
-          {issue.jurisdiction && (
-            <div className="flex items-center gap-1 rounded-full bg-muted/60 px-2.5 py-0.5 text-[10px] font-bold text-muted-foreground">
-              <MapPin className="h-3 w-3" /> {issue.jurisdiction}
-            </div>
-          )}
-        </div>
-        <div className={cn("rounded-full px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider", u.cls)}>
-          {u.label}
-        </div>
+        )}
+        {aiRecommended && (
+          <div className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2.5 py-0.5 text-[10px] font-extrabold text-success">
+            <Sparkles className="h-3 w-3" /> AI Recommended
+          </div>
+        )}
       </div>
+      {/* ========== END TOP BUBBLES ========== */}
 
-      {/* Title */}
-      <h2 className="text-[17px] font-extrabold leading-tight tracking-[-0.2px] text-foreground">
+      <h2 className="text-[17px] font-extrabold leading-tight tracking-[-0.3px] text-foreground pr-2">
         {issue.title}
       </h2>
 
-      {/* What you're voting on */}
-      <div className="mt-2 rounded-xl border border-primary/20 bg-primary/[0.04] px-3 py-[7px]">
-        <div className="mb-0.5 text-[9px] font-extrabold uppercase tracking-[0.12em] text-primary/90">
-          What you’re voting on
+      <div className="mt-3 rounded-2xl border border-primary/20 bg-primary/[0.035] px-3.5 py-3">
+        <div className="mb-1 flex items-center gap-1.5">
+          <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-primary">WHAT YOU'RE VOTING ON</span>
         </div>
-        <p className="text-[12px] leading-[1.3] text-foreground/90">
-          Should the federal government prevent grocery stores from raising prices on everyday food during declared inflation emergencies?
+        <p className="text-[13px] leading-snug text-foreground/90">
+          {issue.whyItMatters ? issue.whyItMatters.split(".")[0] + "." : "Should this policy move forward in your district?"}
         </p>
       </div>
 
-      {/* Why it matters - with Sparkles icon */}
-      <div className="mt-3">
-        <button 
-          type="button" 
-          onClick={() => setShowWhyItMatters(v => !v)} 
-          className="flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/40 px-3.5 py-2.5 text-left text-[11.5px] font-bold tracking-tight text-muted-foreground hover:bg-surface/70 active:bg-surface/60 active:scale-[0.985] transition-all"
-        >
-          <span className="flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5 text-primary" /> Why it matters (tap to expand)
-          </span>
-          <span className={cn("transition-transform", showWhyItMatters && "rotate-180")}>▼</span>
-        </button>
-        {showWhyItMatters && (
-          <div className="mt-2 rounded-xl border border-border/40 bg-surface/30 px-3.5 py-3 text-[12.5px] leading-[1.45] text-foreground/85">
-            {issue.whyItMatters}
-          </div>
-        )}
-      </div>
+      <button onClick={() => setShowWhyItMatters(!showWhyItMatters)} className="mt-3 flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/40 px-3.5 py-2.5 text-left text-[11.5px] font-bold tracking-tight text-muted-foreground hover:bg-surface/70 active:bg-surface/60 active:scale-[0.985] transition-all">
+        <span className="flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-primary" /> Why it matters (tap to expand)</span>
+        <span className={cn("transition-transform", showWhyItMatters && "rotate-180")}>▼</span>
+      </button>
+      {showWhyItMatters && issue.whyItMatters && (
+        <div className="mt-2 rounded-2xl border border-border/50 bg-surface/30 px-4 py-3 text-[13.5px] leading-snug text-foreground/90">{issue.whyItMatters}</div>
+      )}
 
-      {/* Pros & Cons - with Sparkles icon + colored words + more clickable */}
-      <div className="mt-2.5">
-        <button 
-          type="button" 
-          onClick={() => setShowProsCons(v => !v)} 
-          className="flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/40 px-3.5 py-2.5 text-left text-[11.5px] font-bold tracking-tight text-muted-foreground hover:bg-surface/70 active:bg-surface/60 active:scale-[0.985] transition-all"
-        >
-          <span className="flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5 text-primary" /> 
-            <span className="text-success">Pros</span> & <span className="text-destructive">Cons</span> (tap to expand)
-          </span>
-          <span className={cn("transition-transform", showProsCons && "rotate-180")}>▼</span>
-        </button>
-        {showProsCons && (
-          <div className="mt-2 grid grid-cols-2 gap-2.5">
-            {/* PROS content - Green */}
-            <div className="rounded-xl border border-success/40 bg-success/[0.08] px-3 py-2.5">
-              <div className="mb-1.5 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
-                <Check className="h-2.5 w-2.5" strokeWidth={3.5} /> Pros
-              </div>
-              <ul className="space-y-1">
-                {issue.pros.slice(0, 3).map((p, i) => (
-                  <li key={i} className="flex gap-1.5 text-[11.5px] font-normal leading-[1.4] text-foreground/80">
-                    <span className="mt-[6px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-success" />
-                    <span>{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* CONS content - Red */}
-            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.08] px-3 py-2.5">
-              <div className="mb-1.5 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-destructive">
-                <X className="h-2.5 w-2.5" strokeWidth={3.5} /> Cons
-              </div>
-              <ul className="space-y-1">
-                {issue.cons.slice(0, 3).map((c, i) => (
-                  <li key={i} className="flex gap-1.5 text-[11.5px] font-normal leading-[1.4] text-foreground/80">
-                    <span className="mt-[6px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-destructive" />
-                    <span>{c}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Neighbor sentiment + Top story */}
-      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
-        <div className="flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-0.5 text-success">
-          <Users className="h-3.5 w-3.5" /> {yesNeighborPct}% of neighbors in your district feel this too
-        </div>
-        {hasHeat && (
-          <div className="flex items-center gap-1.5 rounded-full bg-orange-500/10 px-2.5 py-0.5 text-orange-600">
-            <Flame className="h-3.5 w-3.5" /> Top story on 3 networks
-          </div>
-        )}
-      </div>
-
-      {/* Verified District Pulse - Compact */}
-      <div className="relative mt-3.5 overflow-hidden rounded-xl border border-success/30 bg-success/[0.06] p-2.5">
-        <div className="flex items-center gap-2.5">
-          <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-success/15 ring-1 ring-success/40">
-            <ShieldCheck className="h-3.5 w-3.5 text-success" strokeWidth={2.75} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
-                Verified District Pulse
-              </span>
-              <span className="text-[15px] font-extrabold text-success tabular-nums">
-                {issue.pulse}%
-              </span>
-            </div>
-
-            {/* Stacked Yes + No bar */}
-            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-success/15 flex">
-              <div className="bg-success transition-all duration-700" style={{ width: `${issue.pulse}%` }} />
-              <div className="bg-destructive transition-all duration-700" style={{ width: `${100 - issue.pulse}%` }} />
-            </div>
-
-            {/* Yes / No percentages */}
-            <div className="mt-1 flex justify-between text-[9.5px] font-bold tabular-nums">
-              <span className="text-success">Yes {issue.pulse}%</span>
-              <span className="text-destructive">No {100 - issue.pulse}%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Voting buttons */}
-      <div className="mt-4 grid grid-cols-3 gap-2">
-        <button 
-          onClick={() => castVote("yes")} 
-          disabled={voted}
-          className={cn(
-            "flex items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-extrabold transition-all active:scale-[0.97]",
-            vote === "yes" 
-              ? "border-success bg-success text-white shadow-[0_0_0_3px_rgba(16,185,129,0.2)]" 
-              : "border-success/40 bg-success/5 text-success hover:bg-success/10"
-          )}
-        >
-          <Check className="h-4 w-4" strokeWidth={3} /> YES
-        </button>
-        <button 
-          onClick={() => castVote("unsure")} 
-          disabled={voted}
-          className={cn(
-            "flex items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-extrabold transition-all active:scale-[0.97]",
-            vote === "unsure" 
-              ? "border-primary bg-primary text-white shadow-[0_0_0_3px_rgba(59,130,246,0.2)]" 
-              : "border-primary/40 bg-primary/5 text-primary hover:bg-primary/10"
-          )}
-        >
-          <HelpCircle className="h-4 w-4" strokeWidth={2.5} /> UNSURE
-        </button>
-        <button 
-          onClick={() => castVote("no")} 
-          disabled={voted}
-          className={cn(
-            "flex items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-extrabold transition-all active:scale-[0.97]",
-            vote === "no" 
-              ? "border-destructive bg-destructive text-white shadow-[0_0_0_3px_rgba(239,68,68,0.2)]" 
-              : "border-destructive/40 bg-destructive/5 text-destructive hover:bg-destructive/10"
-          )}
-        >
-          <X className="h-4 w-4" strokeWidth={3} /> NO
-        </button>
-      </div>
-
-      {/* Success state */}
-      {phase === "done" && (
-        <div className="mt-3 rounded-2xl border border-success/40 bg-success/10 px-4 py-2.5 text-center text-[12px] font-bold text-success">
-          Your vote was recorded. Thank you for making your voice heard.
+      <button onClick={() => setShowProsCons(!showProsCons)} className="mt-2.5 flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/40 px-3.5 py-2.5 text-left text-[11.5px] font-bold tracking-tight text-muted-foreground hover:bg-surface/70 active:bg-surface/60 active:scale-[0.985] transition-all">
+        <span className="flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-primary" /> <span className="text-success">Pros</span> & <span className="text-destructive">Cons</span> (tap to expand)</span>
+        <span className={cn("transition-transform", showProsCons && "rotate-180")}>▼</span>
+      </button>
+      {showProsCons && (
+        <div className="mt-2 grid grid-cols-1 gap-3 rounded-2xl border border-border/50 bg-surface/30 p-4 text-[13px]">
+          <div><div className="mb-1.5 font-extrabold text-success">PROS</div><ul className="space-y-1 text-foreground/90">{issue.pros?.map((p, i) => <li key={i} className="flex gap-2">• {p}</li>)}</ul></div>
+          <div><div className="mb-1.5 font-extrabold text-destructive">CONS</div><ul className="space-y-1 text-foreground/90">{issue.cons?.map((c, i) => <li key={i} className="flex gap-2">• {c}</li>)}</ul></div>
         </div>
       )}
+
+      <div className="mt-4 rounded-2xl border border-border/60 bg-surface/40 p-3.5">
+        <div className="flex items-center justify-between text-[11px]">
+          <div className="flex items-center gap-1.5 text-muted-foreground"><Users className="h-3.5 w-3.5" /><span>{yesNeighborPct}% of neighbors in your district feel this too</span></div>
+          {(issue.urgency === "critical" || (issue.momentum ?? 0) >= 400) && <div className="text-[10px] font-extrabold text-orange-500">🔥 Top story on 3 networks</div>}
+        </div>
+        <div className="mt-3">
+          <div className="mb-1.5 flex items-center justify-between">
+            <div className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-success" /><span className="text-[11px] font-extrabold tracking-[0.3px] text-success">VERIFIED DISTRICT PULSE</span></div>
+            <span className="text-[15px] font-extrabold tabular-nums text-success">{issue.pulse}%</span>
+          </div>
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted/60 flex">
+            <div className="h-full bg-success transition-all" style={{ width: `${issue.pulse}%` }} />
+            <div className="h-full bg-destructive transition-all" style={{ width: `${100 - issue.pulse}%` }} />
+          </div>
+          <div className="mt-1 flex justify-between text-[10px] font-bold">
+            <span className="text-success">Yes {issue.pulse}%</span>
+            <span className="text-destructive">No {100 - issue.pulse}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        <button onClick={() => castVote("yes")} disabled={voted} className={cn("flex h-11 items-center justify-center gap-2 rounded-2xl border text-[13px] font-extrabold transition-all active:scale-[0.985]", vote === "yes" ? "border-success bg-success text-white" : "border-border/70 bg-surface hover:bg-success/5")}><Check className="h-4 w-4" /> YES</button>
+        <button onClick={() => castVote("unsure")} disabled={voted} className={cn("flex h-11 items-center justify-center gap-2 rounded-2xl border text-[13px] font-extrabold transition-all active:scale-[0.985]", vote === "unsure" ? "border-primary bg-primary text-white" : "border-border/70 bg-surface hover:bg-primary/5")}><HelpCircle className="h-4 w-4" /> UNSURE</button>
+        <button onClick={() => castVote("no")} disabled={voted} className={cn("flex h-11 items-center justify-center gap-2 rounded-2xl border text-[13px] font-extrabold transition-all active:scale-[0.985]", vote === "no" ? "border-destructive bg-destructive text-white" : "border-border/70 bg-surface hover:bg-destructive/5")}><X className="h-4 w-4" /> NO</button>
+      </div>
+
+      {voted && <div className="mt-3 rounded-2xl border border-success/30 bg-success/5 px-4 py-2.5 text-center text-[12.5px] font-bold text-success">Your vote was recorded. Thank you for making your voice heard.</div>}
     </article>
   );
 }
