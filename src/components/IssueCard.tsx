@@ -145,7 +145,7 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
 
       <h3 className="mt-4 text-[20px] font-bold leading-[1.25] tracking-tight text-balance text-foreground">{issue.title}</h3>
 
-      {/* Why it matters — COLLAPSED BY DEFAULT */}
+      {/* Why it matters — COLLAPSED BY DEFAULT with (tap to expand) */}
       <div className="mt-4">
         <button
           type="button"
@@ -153,7 +153,7 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
           className="flex w-full items-center justify-between rounded-xl border border-primary/30 bg-primary/[0.06] px-3 py-2 text-left text-[11px] font-bold tracking-tight text-primary/90 hover:bg-primary/[0.1] active:bg-primary/[0.12]"
         >
           <span className="flex items-center gap-1.5">
-            <Sparkles className="h-3 w-3" /> Why it matters
+            <Sparkles className="h-3 w-3" /> Why it matters (tap to expand)
           </span>
           <span className={cn("transition-transform", showWhyItMatters && "rotate-180")}>▼</span>
         </button>
@@ -167,43 +167,43 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         )}
       </div>
 
-      {/* Pros & Cons — COLLAPSED BY DEFAULT (matching header style) */}
+      {/* Pros & Cons — COLLAPSED BY DEFAULT (Green / Red theme) */}
       <div className="mt-4">
         <button
           type="button"
           onClick={() => setShowProsCons(v => !v)}
-          className="flex w-full items-center justify-between rounded-xl border border-primary/30 bg-primary/[0.06] px-3 py-2 text-left text-[11px] font-bold tracking-tight text-primary/90 hover:bg-primary/[0.1] active:bg-primary/[0.12]"
+          className="flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/40 px-3 py-2 text-left text-[11px] font-bold tracking-tight text-muted-foreground hover:text-foreground active:bg-surface/70"
         >
-          <span><span className="text-success font-extrabold">Pros</span> & <span className="text-destructive font-extrabold">Cons</span> (tap to expand)</span>
+          <span>Pros & Cons (tap to expand)</span>
           <span className={cn("transition-transform", showProsCons && "rotate-180")}>▼</span>
         </button>
 
         {showProsCons && (
           <div className="mt-2 grid grid-cols-2 gap-2.5">
-            {/* PROS - Strong Green */}
-            <div className="rounded-xl border-2 border-success bg-success/10 px-3.5 py-3">
-              <div className="mb-2 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-success">
-                <Check className="h-3 w-3" strokeWidth={4} /> Pros
+            {/* PROS - Green */}
+            <div className="rounded-xl border border-success/40 bg-success/[0.08] px-3 py-2.5">
+              <div className="mb-1.5 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
+                <Check className="h-2.5 w-2.5" strokeWidth={3.5} /> Pros
               </div>
-              <ul className="space-y-1.5">
+              <ul className="space-y-1">
                 {issue.pros.slice(0, 3).map((p, i) => (
-                  <li key={i} className="flex gap-2 text-[12px] font-medium leading-snug text-foreground/90">
-                    <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
+                  <li key={i} className="flex gap-1.5 text-[11.5px] font-normal leading-[1.4] text-foreground/80">
+                    <span className="mt-[6px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-success" />
                     <span>{p}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* CONS - Strong Red */}
-            <div className="rounded-xl border-2 border-destructive bg-destructive/10 px-3.5 py-3">
-              <div className="mb-2 flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-destructive">
-                <X className="h-3 w-3" strokeWidth={4} /> Cons
+            {/* CONS - Red */}
+            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.08] px-3 py-2.5">
+              <div className="mb-1.5 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-destructive">
+                <X className="h-2.5 w-2.5" strokeWidth={3.5} /> Cons
               </div>
-              <ul className="space-y-1.5">
+              <ul className="space-y-1">
                 {issue.cons.slice(0, 3).map((c, i) => (
-                  <li key={i} className="flex gap-2 text-[12px] font-medium leading-snug text-foreground/90">
-                    <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-destructive" />
+                  <li key={i} className="flex gap-1.5 text-[11.5px] font-normal leading-[1.4] text-foreground/80">
+                    <span className="mt-[6px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-destructive" />
                     <span>{c}</span>
                   </li>
                 ))}
