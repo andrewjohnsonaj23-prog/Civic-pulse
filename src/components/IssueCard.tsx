@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ShieldCheck, Sparkles } from "lucide-react";
+import { ShieldCheck, Sparkles, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Issue } from "@/lib/mock-data";
 import { CATEGORY_COLORS } from "@/lib/mock-data";
@@ -18,13 +18,13 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
   onVoted?: () => void; 
   aiRecommended?: boolean;
 }) {
-  const [vote, setVote] = useState<Vote>(null);
-  const [showWhy, setShowWhy] = useState(false);
-  const [showProsCons, setShowProsCons] = useState(false);
-
   if (!issue || typeof issue !== "object") {
     return <div className="rounded-3xl border border-border/60 bg-surface p-4 text-sm text-muted-foreground">Issue data unavailable</div>;
   }
+
+  const [vote, setVote] = useState<Vote>(null);
+  const [showWhy, setShowWhy] = useState(false);
+  const [showProsCons, setShowProsCons] = useState(false);
 
   const voted = vote !== null;
 
@@ -40,7 +40,6 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
   const yes = Number(issue.yes) || 0;
   const no = Number(issue.no) || 0;
   const unsure = Number(issue.unsure) || 0;
-  const goal = Number(issue.goal) || 1;
 
   const whyText = issue.whyItMatters || issue.description || "This issue affects your district directly.";
   const prosList = Array.isArray(issue.pros) && issue.pros.length > 0 ? issue.pros : ["Helps working families", "Reduces long-term costs"];
@@ -135,7 +134,7 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
         </div>
       )}
 
-      {/* Verified District Pulse - stacked bar */}
+      {/* Verified District Pulse */}
       <div className="mt-4 rounded-2xl border border-success/20 bg-success/5 p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -197,9 +196,18 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
         </button>
       </div>
 
+      {/* IMPROVED SUCCESS MESSAGE */}
       {voted && (
-        <div className="mt-2 text-center text-[11px] font-medium text-success">
-          Your vote was recorded. Thank you.
+        <div className="mt-3 rounded-2xl border border-success/30 bg-success/10 p-3.5 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="flex items-center justify-center gap-2 text-success">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-success/20">
+              <Check className="h-3.5 w-3.5" />
+            </div>
+            <span className="text-[13px] font-extrabold">Vote recorded & sent to your representative</span>
+          </div>
+          <p className="mt-1 text-[11.5px] text-success/85">
+            Thank you for making your voice heard.
+          </p>
         </div>
       )}
     </article>
