@@ -1,0 +1,151 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * CivicPulse design system. Dark-mode primary.
+ * All colors stored as oklch tokens. Bottom-tab mobile-first PWA.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-glow: var(--primary-glow);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-display: "Manrope", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+:root,
+.dark {
+  /* Sharper, more institutional radius */
+  --radius: 0.5rem;
+
+  /* Surfaces — #0A1428 deep navy, restrained chroma for gravitas */
+  --background: oklch(0.158 0.043 263);
+  --foreground: oklch(0.97 0.005 250);
+  --surface: oklch(0.195 0.04 263);
+  --surface-elevated: oklch(0.225 0.04 263);
+  --card: oklch(0.195 0.04 263);
+  --card-foreground: oklch(0.97 0.005 250);
+  --popover: oklch(0.185 0.04 263);
+  --popover-foreground: oklch(0.97 0.005 250);
+
+  /* Brand — muted institutional navy-blue */
+  --primary: oklch(0.52 0.12 255);
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-glow: oklch(0.60 0.10 252);
+
+  --secondary: oklch(0.24 0.035 263);
+  --secondary-foreground: oklch(0.97 0.005 250);
+
+  --muted: oklch(0.22 0.03 263);
+  --muted-foreground: oklch(0.70 0.018 258);
+  --accent: oklch(0.26 0.035 263);
+  --accent-foreground: oklch(0.97 0.005 250);
+
+  /* Semantics — restrained, authoritative */
+  --success: oklch(0.60 0.09 168);               /* Muted teal — no gamey green */
+  --success-foreground: oklch(0.12 0.03 150);
+  --warning: oklch(0.74 0.11 78);                /* Warm civic gold (informs streaks/quests) */
+  --warning-foreground: oklch(0.18 0.03 70);
+  --destructive: oklch(0.48 0.19 27);            /* #B91C1C deep serious red */
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.34 0.03 263 / 42%);
+  --input: oklch(0.24 0.03 263);
+  --ring: oklch(0.52 0.12 255);
+
+  --gradient-primary: linear-gradient(135deg, oklch(0.46 0.11 255), oklch(0.54 0.10 252));
+  --gradient-success: linear-gradient(135deg, oklch(0.56 0.09 168), oklch(0.62 0.08 172));
+  --gradient-card: linear-gradient(180deg, oklch(0.205 0.04 263), oklch(0.175 0.04 263));
+  --gradient-hero: radial-gradient(circle at 30% 20%, oklch(0.52 0.12 255 / 10%), transparent 65%),
+                   radial-gradient(circle at 80% 80%, oklch(0.48 0.19 27 / 5%), transparent 60%);
+
+  --shadow-card: 0 1px 0 0 oklch(1 0 0 / 2.5%) inset, 0 4px 14px -8px oklch(0 0 0 / 65%);
+  --shadow-glow: 0 0 16px -10px oklch(0.52 0.12 255 / 28%);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: dark;
+    background-color: var(--color-background);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .bg-gradient-primary { background-image: var(--gradient-primary); }
+  .bg-gradient-success { background-image: var(--gradient-success); }
+  .bg-gradient-card { background-image: var(--gradient-card); }
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
+  .safe-top { padding-top: max(env(safe-area-inset-top), 0.5rem); }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 oklch(0.50 0.12 255 / 30%); }
+  100% { box-shadow: 0 0 0 10px oklch(0.50 0.12 255 / 0%); }
+}
+.pulse-ring { animation: pulse-ring 2.6s ease-out infinite; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.3s ease-out both; }
