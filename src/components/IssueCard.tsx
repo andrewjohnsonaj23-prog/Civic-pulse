@@ -112,7 +112,7 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
       >
         <div className="flex items-center gap-2">
           <span className="text-[13px] font-extrabold">
-            <span className="text-success">Pros</span> & <span className="text-destructive">Cons</span> <span className="text-muted-foreground">(tap to expand)</span>
+            <span className="text-success">Pros</span> &amp; <span className="text-destructive">Cons</span> <span className="text-muted-foreground">(tap to expand)</span>
           </span>
         </div>
         <span className="text-xs text-muted-foreground">{showProsCons ? "−" : "+"}</span>
@@ -196,7 +196,7 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
         </button>
       </div>
 
-      {/* IMPROVED SUCCESS MESSAGE */}
+      {/* ========== IMPROVED SUCCESS MESSAGE ========== */}
       {voted && (
         <div className="mt-3 rounded-2xl border border-success/30 bg-success/10 p-3.5 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center justify-center gap-2 text-success">
