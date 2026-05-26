@@ -1,0 +1,144 @@
+import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Sparkles } from "lucide-react";
+import { IssueCard } from "@/components/IssueCard";
+import { ISSUES } from "@/lib/mock-data";
+import { cn } from "@/lib/utils";
+
+export const Route = createFileRoute("/_tabs/")({
+  component: IssuesFeed,
+});
+
+function IssuesFeed() {
+  const [scope, setScope] = useState<"district" | "local" | "state" | "federal" | "all">("district");
+
+  const filteredIssues = ISSUES.filter(issue => {
+    if (scope === "all") return true;
+    if (scope === "district") return true;
+    if (scope === "local") return issue.jurisdiction === "Knoxville" || issue.jurisdiction === "Knox County";
+    if (scope === "state") return issue.jurisdiction === "Tennessee";
+    if (scope === "federal") return issue.jurisdiction === "Federal";
+    return true;
+  });
+
+  return (
+    <div className="min-h-screen bg-background pb-24">
+      {/* TOP SECTION - EXACT MATCH TO LOVABLE VIDEO */}
+      <div className="px-4 pt-6 pb-4" style={{ backgroundColor: "#0F172A" }}>
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-[15px] font-bold text-white">Good evening, Andrew</div>
+            <div className="text-[13px] text-white/70">Here's what matters in your district today</div>
+          </div>
+          <div className="text-right">
+            <div className="text-[11px] font-extrabold text-emerald-400">7 DAY STREAK</div>
+            <div className="text-[10px] text-white/60">Keep it going!</div>
+          </div>
+        </div>
+
+        {/* Big headline exactly like video */}
+        <div className="mt-3">
+          <div className="text-[22px] font-extrabold leading-[1.1] tracking-[-0.4px] text-white">
+            Your voice. Real power.<br />In your hands.
+          </div>
+          <div className="mt-1.5 text-[13.5px] text-white/70">
+            A quiet, verified feed — built for peace, family, stability.
+          </div>
+        </div>
+
+        {/* TODAY'S QUEST - gold icon + pill style like video */}
+        <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-3.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-400">
+                <span className="text-[13px]">🎯</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[13px] font-extrabold text-white">TODAY'S QUEST</span>
+                <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-white">+25 IP</span>
+              </div>
+            </div>
+            <div className="text-[12px] font-bold text-white/70">Vote on 2 issues • 0/2</div>
+          </div>
+        </div>
+
+        {/* QUICK ACTIONS - pill style exactly like video */}
+        <div className="mt-3 flex flex-wrap gap-2">
+          <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1.5 text-[12px] font-bold text-white">
+            🗳️ Election <span className="text-primary">84d</span>
+          </div>
+          <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1.5 text-[12px] font-bold text-white">
+            👥 Reps <span className="text-emerald-400">4/8</span>
+          </div>
+          <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1.5 text-[12px] font-bold text-white">
+            ✨ Personalize
+          </div>
+        </div>
+
+        {/* Want bigger impact link */}
+        <div className="mt-2.5">
+          <button className="text-[13px] font-extrabold text-primary flex items-center gap-1 active:opacity-80">
+            Want bigger impact? Try Federal →
+          </button>
+        </div>
+
+        {/* 20 ISSUES + Filter & Sort */}
+        <div className="mt-3 flex items-center justify-between text-[12.5px]">
+          <div className="font-extrabold text-white">20 ISSUES</div>
+          <div className="text-white/60">Filter & Sort</div>
+        </div>
+      </div>
+
+      {/* SCOPE TABS - exactly like video (My Feed active blue) */}
+      <div className="px-4 mt-1 mb-3 flex gap-1.5 overflow-x-auto pb-2">
+        {[
+          { key: "district", label: "My Feed" },
+          { key: "local", label: "Local" },
+          { key: "state", label: "State" },
+          { key: "federal", label: "Federal" },
+          { key: "all", label: "All" },
+        ].map((s) => (
+          <button
+            key={s.key}
+            onClick={() => setScope(s.key as any)}
+            className={cn(
+              "px-4 py-1.5 rounded-full text-[13px] font-bold whitespace-nowrap transition-all",
+              scope === s.key
+                ? "bg-primary text-white shadow-sm"
+                : "bg-white/10 border border-white/10 text-white/80 active:bg-white/15"
+            )}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Recommended for you */}
+      {scope === "district" && (
+        <div className="mb-3 px-4">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-[11px] font-extrabold text-primary">
+            <Sparkles className="h-3.5 w-3.5" /> Recommended for you
+          </div>
+        </div>
+      )}
+
+      {/* ISSUE CARDS - keeping all our GitHub improvements intact */}
+      <div className="px-4 space-y-4">
+        {filteredIssues.length > 0 ? (
+          filteredIssues.map((issue) => (
+            <IssueCard
+              key={issue.id}
+              issue={issue}
+              onVoted={() => {}}
+              aiRecommended={false}
+            />
+          ))
+        ) : (
+          <div className="text-center py-10 text-muted-foreground text-[14px]">
+            No issues in this scope yet.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
