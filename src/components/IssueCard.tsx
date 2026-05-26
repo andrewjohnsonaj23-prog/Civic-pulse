@@ -129,8 +129,8 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
       </div>
 
       {aiRecommended && (
-        <div className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/25 bg-primary/[0.06] px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-primary/85">
-          <Sparkles className="h-2.5 w-2.5" strokeWidth={3} /> AI Recommended for You
+        <div className="mt-2 inline-flex w-fit items-center gap-1.5 rounded-full border border-success/40 bg-success/[0.08] px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-success">
+          <Sparkles className="h-2.5 w-2.5 text-success" strokeWidth={3} /> AI Recommended for You
         </div>
       )}
 
