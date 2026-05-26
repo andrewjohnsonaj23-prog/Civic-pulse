@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ShieldCheck, MapPin, Bell, Sparkles, AlertCircle, TrendingUp, CheckCircle2, Megaphone, Check, X, HelpCircle, Clock, Flame, Users, Vote, ArrowRight, SlidersHorizontal, Gavel, Loader2, Settings, Target, Trophy, ChevronDown } from "lucide-react";
-import { IssueCard, MiniJourneyTracker } from "@/components/IssueCard";
+import { IssueCard } from "@/components/IssueCard";
 import { ISSUES, USER, CATEGORY_ORDER, type Scope } from "@/lib/mock-data";
 
 import { cn } from "@/lib/utils";
