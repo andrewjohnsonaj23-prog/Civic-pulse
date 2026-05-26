@@ -17,8 +17,8 @@ const JOURNEY = [
 export function MiniJourneyTracker({ stageIndex, success = false }: { stageIndex: number; success?: boolean }) {
   const tone = success ? "success" : "primary";
   return (
-    <div className="mt-3 rounded-xl border border-border/60 bg-surface/40 px-2.5 py-1.5">
-      <div className="mb-1 flex items-center justify-between">
+    <div className="mt-4 rounded-xl border border-border/60 bg-surface/40 px-2.5 py-2">
+      <div className="mb-1.5 flex items-center justify-between">
         <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Bill Journey</span>
         <span className={cn("text-[9.5px] font-extrabold uppercase tracking-wider", tone === "success" ? "text-success" : "text-primary")}>
           {JOURNEY[Math.min(stageIndex, JOURNEY.length - 1)].label}
@@ -28,17 +28,14 @@ export function MiniJourneyTracker({ stageIndex, success = false }: { stageIndex
         {JOURNEY.map((s, i) => {
           const active = i <= stageIndex;
           const isCurrent = i === stageIndex;
+          const Icon = s.Icon;
           return (
-            <div key={s.key} className="flex flex-1 items-center gap-1">
-              <div className="flex flex-col items-center gap-1">
-                <div className={cn("flex h-5 w-5 items-center justify-center rounded-full ring-1 transition-all", active ? (tone === "success" ? "bg-success/25 text-success ring-success/50" : "bg-primary/20 text-primary ring-primary/45") : "bg-surface text-muted-foreground/50 ring-border/50", isCurrent && (tone === "success" ? "shadow-[0_0_12px_-2px_oklch(0.72_0.21_148/70%)]" : "shadow-[0_0_12px_-2px_oklch(0.79_0.13_230/75%)]"))}>
-                  <s.Icon className="h-2.5 w-2.5" strokeWidth={3} />
-                </div>
-                <span className={cn("text-[8.5px] font-bold tracking-tight", active ? "text-foreground/80" : "text-muted-foreground/55")}>{s.label}</span>
+            <div key={i} className={cn("flex flex-1 items-center gap-1 rounded-lg px-2 py-1", active ? "bg-primary/10" : "bg-muted/40")}>
+              <div className={cn("flex h-5 w-5 items-center justify-center rounded-md", active ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground")}>
+                <Icon className="h-3 w-3" strokeWidth={2.5} />
               </div>
-              {i < JOURNEY.length - 1 && (
-                <div className={cn("mb-3.5 h-px flex-1 transition-colors", i < stageIndex ? (tone === "success" ? "bg-success/55" : "bg-primary/45") : "bg-border/50")} />
-              )}
+              <span className={cn("text-[9.5px] font-bold", active ? "text-primary" : "text-muted-foreground")}>{s.label}</span>
+              {isCurrent && <span className="ml-auto text-[9px] text-primary/70">•</span>}
             </div>
           );
         })}
@@ -47,35 +44,22 @@ export function MiniJourneyTracker({ stageIndex, success = false }: { stageIndex
   );
 }
 
-const POP_KEYFRAMES = `
-@keyframes votePop{0%{transform:scale(.1);opacity:0}25%{transform:scale(2.15);opacity:1}50%{transform:scale(.8)}72%{transform:scale(1.25)}100%{transform:scale(1.1);opacity:1}}
-@keyframes voteRing{0%{transform:scale(.4);opacity:1}100%{transform:scale(3.6);opacity:0}}
-@keyframes voteRing2{0%{transform:scale(.4);opacity:.8}100%{transform:scale(4.9);opacity:0}}
-@keyframes voteBtnPulse{0%{box-shadow:0 0 0 0 color-mix(in oklab, var(--color-success) 95%, transparent),0 0 40px 8px color-mix(in oklab, var(--color-success) 85%, transparent)}100%{box-shadow:0 0 0 44px color-mix(in oklab, var(--color-success) 0%, transparent),0 0 18px 2px color-mix(in oklab, var(--color-success) 0%, transparent)}}
-@keyframes voteGlow{0%,100%{filter:drop-shadow(0 0 18px oklch(0.72_0.21_148 / 95%))}50%{filter:drop-shadow(0 0 30px oklch(0.99 0 0 / 95%))}}
-@keyframes successBannerIn{0%{transform:scale(.94) translateY(6px);opacity:0}55%{transform:scale(1.02) translateY(0);opacity:1}100%{transform:scale(1) translateY(0);opacity:1}}
-@keyframes successHalo{0%,100%{box-shadow:0 0 0 0 color-mix(in oklab, var(--color-success) 0%, transparent),0 12px 40px -12px color-mix(in oklab, var(--color-success) 55%, transparent)}50%{box-shadow:0 0 0 6px color-mix(in oklab, var(--color-success) 14%, transparent),0 16px 50px -10px color-mix(in oklab, var(--color-success) 70%, transparent)}}
-@keyframes pulseDot{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.25)}}
-@keyframes pulseBar{0%{transform:translateX(-100%)}100%{transform:translateX(220%)}}
-@keyframes plusOneRise{0%{transform:translateY(0) scale(.8);opacity:0}20%{opacity:1}100%{transform:translateY(-32px) scale(1.1);opacity:0}}
-@keyframes confettiPop{0%{transform:translate(0,0) scale(0);opacity:0}25%{opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(.6);opacity:0}}
-`;
-
-const JURISDICTION_LABEL: Record<Issue["scope"], string> = {
-  district: "District 7",
-  local: "Local",
-  state: "State",
-  federal: "Federal",
-};
-
-const URGENCY: Record<Issue["urgency"], { label: string; cls: string; icon?: typeof Flame }> = {
-  critical: { label: "TIME-SENSITIVE", cls: "bg-destructive/12 text-destructive/90 ring-1 ring-destructive/30" },
-  high: { label: "PRIORITY", cls: "bg-warning/12 text-warning/90 ring-1 ring-warning/25" },
+const URGENCY: Record<string, { label: string; cls: string }> = {
+  critical: { label: "CRITICAL", cls: "bg-destructive text-white" },
+  high: { label: "HIGH", cls: "bg-orange-500 text-white" },
   medium: { label: "ACTIVE", cls: "bg-muted text-foreground/70 ring-1 ring-border/50" },
   low: { label: "OPEN", cls: "bg-muted text-muted-foreground ring-1 ring-border/40" },
 };
 
-export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommended, relevance, alignmentNote }: { issue: Issue; onVoted?: () => void; trendingLabel?: "Active Discussion" | null; whyHere?: string | null; aiRecommended?: boolean; relevance?: number; alignmentNote?: string | null }) {
+export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommended, relevance, alignmentNote }: { 
+  issue: Issue; 
+  onVoted?: () => void; 
+  trendingLabel?: "Active Discussion" | null; 
+  whyHere?: string | null; 
+  aiRecommended?: boolean; 
+  relevance?: number; 
+  alignmentNote?: string | null 
+}) {
   const [vote, setVote] = useState<Vote>(null);
   const [phase, setPhase] = useState<"idle" | "pop" | "done">("idle");
   const [saved, setSaved] = useState(false);
@@ -83,7 +67,6 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
   const [showWhyItMatters, setShowWhyItMatters] = useState(false);
 
   const voted = vote !== null;
-
   const castVote = (v: Exclude<Vote, null>) => {
     setVote(v);
     setPhase("pop");
@@ -101,109 +84,100 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
   const hasHeat = issue.urgency === "critical" || (issue.momentum ?? 0) >= 400;
 
   return (
-    <article className={cn("fade-up group relative overflow-hidden rounded-2xl border bg-gradient-card p-5 shadow-card transition-all duration-300 hover:border-primary/35 hover:-translate-y-[1px] hover:shadow-[0_18px_44px_-24px_oklch(0.79_0.13_230/30%)] active:scale-[0.995] cursor-pointer", hasHeat ? "border-border/70 shadow-[0_1px_0_0_oklch(1_0_0/4%)_inset,0_18px_40px_-24px_oklch(0.66_0.23_25/35%)]" : "border-border/70", phase === "done" && "opacity-95 cursor-default")}>
-      <style>{POP_KEYFRAMES}</style>
-
-      {/* Top header */}
-      <header className="flex flex-wrap items-center gap-1.5">
-        <span className="inline-flex items-center rounded-full px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] ring-1" style={{ color: catColor, backgroundColor: `color-mix(in oklab, ${catColor} 18%, transparent)`, boxShadow: `inset 0 0 0 1px color-mix(in oklab, ${catColor} 32%, transparent)` }}>
-          {issue.category}
-        </span>
-        <div className="ml-auto flex flex-wrap items-center justify-end gap-1.5">
-          {trendingLabel && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-2 py-1 text-[9.5px] font-bold uppercase tracking-wider text-primary/90 ring-1 ring-primary/25">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary/80" /> {trendingLabel}
-            </span>
+    <article className={cn(
+      "group relative overflow-hidden rounded-3xl border border-border/60 bg-surface p-5 transition-all active:scale-[0.985]",
+      phase === "pop" && "animate-[votePop_0.55s_ease-out]"
+    )}>
+      {/* Category + Urgency header */}
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <div className="rounded-full px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-[0.14em] ring-1 ring-inset" style={{ backgroundColor: `${catColor}15`, color: catColor, borderColor: `${catColor}40` }}>
+            {issue.category}
+          </div>
+          {issue.jurisdiction && (
+            <div className="flex items-center gap-1 rounded-full bg-muted/60 px-2.5 py-0.5 text-[10px] font-bold text-muted-foreground">
+              <MapPin className="h-3 w-3" /> {issue.jurisdiction}
+            </div>
           )}
-          <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-extrabold uppercase tracking-wider", u.cls)}>
-            {u.icon && <u.icon className="h-2.5 w-2.5" strokeWidth={3} />} {u.label}
-          </span>
-          <button type="button" onClick={(e) => { e.stopPropagation(); setSaved(s => !s); }} className={cn("flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 active:scale-[0.88] hover:brightness-110", saved ? "bg-destructive/20 text-destructive ring-2 ring-destructive/50" : "bg-surface/70 text-muted-foreground ring-1 ring-border/60 hover:text-foreground hover:ring-border")}>
-            <Heart className="h-3.5 w-3.5" strokeWidth={2.5} fill={saved ? "currentColor" : "none"} />
-          </button>
         </div>
-      </header>
-
-      <div className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/75">
-        <MapPin className="h-2.5 w-2.5" /> {JURISDICTION_LABEL[issue.scope]}
+        <div className={cn("rounded-full px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider", u.cls)}>
+          {u.label}
+        </div>
       </div>
 
-      {aiRecommended && (
-        <div className="mt-1.5 inline-flex w-fit items-center gap-1.5 rounded-full border border-success/40 bg-success/[0.08] px-2.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-success">
-          <Sparkles className="h-2.5 w-2.5 text-success" strokeWidth={3} /> AI Recommended for You
+      {/* Title */}
+      <h2 className="text-[17px] font-extrabold leading-tight tracking-[-0.2px] text-foreground">
+        {issue.title}
+      </h2>
+
+      {/* What you're voting on */}
+      <div className="mt-2 rounded-xl border border-primary/20 bg-primary/[0.04] px-3 py-[7px]">
+        <div className="mb-0.5 text-[9px] font-extrabold uppercase tracking-[0.12em] text-primary/90">
+          What you’re voting on
         </div>
-      )}
+        <p className="text-[12px] leading-[1.3] text-foreground/90">
+          Should the federal government prevent grocery stores from raising prices on everyday food during declared inflation emergencies?
+        </p>
+      </div>
 
-      {!aiRecommended && whyHere && (
-        <div className="mt-1.5 flex items-center gap-1.5 rounded-full border border-primary/25 bg-primary/[0.07] px-2.5 py-1 text-[10px] font-bold tracking-tight text-primary/90 w-fit">
-          <Sparkles className="h-2.5 w-2.5" strokeWidth={3} />
-          <span className="uppercase tracking-wider text-[9px] text-primary/70">Why this is here</span>
-          <span aria-hidden className="text-primary/40">·</span>
-          <span className="text-primary normal-case">{whyHere}</span>
-        </div>
-      )}
-
-      <h3 className="mt-3 text-[19px] font-bold leading-[1.2] tracking-tight text-balance text-foreground">{issue.title}</h3>
-
-      {/* Why it matters — COLLAPSED BY DEFAULT */}
+      {/* Why it matters - with Sparkles icon */}
       <div className="mt-3">
-        <button
-          type="button"
-          onClick={() => setShowWhyItMatters(v => !v)}
-          className="flex w-full items-center justify-between rounded-xl border border-primary/30 bg-primary/[0.06] px-3 py-2 text-left text-[11px] font-bold tracking-tight text-primary/90 hover:bg-primary/[0.1] active:bg-primary/[0.12]"
+        <button 
+          type="button" 
+          onClick={() => setShowWhyItMatters(v => !v)} 
+          className="flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/40 px-3.5 py-2.5 text-left text-[11.5px] font-bold tracking-tight text-muted-foreground hover:bg-surface/70 active:bg-surface/60 active:scale-[0.985] transition-all"
         >
           <span className="flex items-center gap-1.5">
-            <Sparkles className="h-3 w-3" /> Why it matters (tap to expand)
+            <Sparkles className="h-3.5 w-3.5 text-primary" /> Why it matters (tap to expand)
           </span>
           <span className={cn("transition-transform", showWhyItMatters && "rotate-180")}>▼</span>
         </button>
-
         {showWhyItMatters && (
-          <div className="mt-1.5 rounded-xl border border-primary/20 bg-primary/[0.05] px-3 py-2">
-            <p className="text-[12px] font-normal leading-relaxed text-foreground/85">
-              {issue.whyItMatters}
-            </p>
+          <div className="mt-2 rounded-xl border border-border/40 bg-surface/30 px-3.5 py-3 text-[12.5px] leading-[1.45] text-foreground/85">
+            {issue.whyItMatters}
           </div>
         )}
       </div>
 
-      {/* Pros & Cons — COLLAPSED BY DEFAULT (Green / Red theme) */}
-      <div className="mt-3">
-        <button
-          type="button"
-          onClick={() => setShowProsCons(v => !v)}
-          className="flex w-full items-center justify-between rounded-xl border border-primary/30 bg-primary/[0.06] px-3 py-2 text-left text-[11px] font-bold tracking-tight text-primary/90 hover:bg-primary/[0.1] active:bg-primary/[0.12]"
+      {/* Pros & Cons - with Sparkles icon + colored words + more clickable */}
+      <div className="mt-2.5">
+        <button 
+          type="button" 
+          onClick={() => setShowProsCons(v => !v)} 
+          className="flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/40 px-3.5 py-2.5 text-left text-[11.5px] font-bold tracking-tight text-muted-foreground hover:bg-surface/70 active:bg-surface/60 active:scale-[0.985] transition-all"
         >
-          <span><span className="text-success">Pros</span> & <span className="text-destructive">Cons</span> (tap to expand)</span>
+          <span className="flex items-center gap-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-primary" /> 
+            <span className="text-success">Pros</span> & <span className="text-destructive">Cons</span> (tap to expand)
+          </span>
           <span className={cn("transition-transform", showProsCons && "rotate-180")}>▼</span>
         </button>
-
         {showProsCons && (
-          <div className="mt-1.5 grid grid-cols-2 gap-2">
-            {/* PROS - Green */}
-            <div className="rounded-xl border border-success/40 bg-success/[0.08] px-3 py-2">
-              <div className="mb-1 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
+          <div className="mt-2 grid grid-cols-2 gap-2.5">
+            {/* PROS content - Green */}
+            <div className="rounded-xl border border-success/40 bg-success/[0.08] px-3 py-2.5">
+              <div className="mb-1.5 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
                 <Check className="h-2.5 w-2.5" strokeWidth={3.5} /> Pros
               </div>
               <ul className="space-y-1">
                 {issue.pros.slice(0, 3).map((p, i) => (
-                  <li key={i} className="flex gap-1.5 text-[11px] font-normal leading-[1.35] text-foreground/80">
-                    <span className="mt-[5px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-success" />
+                  <li key={i} className="flex gap-1.5 text-[11.5px] font-normal leading-[1.4] text-foreground/80">
+                    <span className="mt-[6px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-success" />
                     <span>{p}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* CONS - Red */}
-            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.08] px-3 py-2">
-              <div className="mb-1 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-destructive">
+            {/* CONS content - Red */}
+            <div className="rounded-xl border border-destructive/40 bg-destructive/[0.08] px-3 py-2.5">
+              <div className="mb-1.5 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-destructive">
                 <X className="h-2.5 w-2.5" strokeWidth={3.5} /> Cons
               </div>
               <ul className="space-y-1">
                 {issue.cons.slice(0, 3).map((c, i) => (
-                  <li key={i} className="flex gap-1.5 text-[11px] font-normal leading-[1.35] text-foreground/80">
-                    <span className="mt-[5px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-destructive" />
+                  <li key={i} className="flex gap-1.5 text-[11.5px] font-normal leading-[1.4] text-foreground/80">
+                    <span className="mt-[6px] inline-block h-[3px] w-[3px] shrink-0 rounded-full bg-destructive" />
                     <span>{c}</span>
                   </li>
                 ))}
@@ -213,36 +187,42 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         )}
       </div>
 
-      <div className="mt-4 h-px bg-gradient-to-r from-transparent via-border/70 to-transparent" />
-
-      {/* Momentum & social proof - tighter */}
-      <div className="mt-3 flex flex-wrap items-center gap-1.5">
-        <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-2.5 py-1 text-[10px] font-bold text-primary ring-1 ring-primary/25">
-          <Users className="h-2.5 w-2.5" strokeWidth={3} /> {yesNeighborPct}% of neighbors in your district feel this too
-        </span>
-        {issue.momentumText && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-surface/70 px-2 py-0.5 text-[9.5px] font-semibold text-muted-foreground ring-1 ring-border/50">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary/70" /> {issue.momentumText}
-        </span>
+      {/* Neighbor sentiment + Top story */}
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
+        <div className="flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-0.5 text-success">
+          <Users className="h-3.5 w-3.5" /> {yesNeighborPct}% of neighbors in your district feel this too
+        </div>
+        {hasHeat && (
+          <div className="flex items-center gap-1.5 rounded-full bg-orange-500/10 px-2.5 py-0.5 text-orange-600">
+            <Flame className="h-3.5 w-3.5" /> Top story on 3 networks
+          </div>
         )}
       </div>
 
-      {/* Verified District Pulse - Smaller & Compact */}
-      <div className="relative mt-3 overflow-hidden rounded-lg border border-success/30 bg-success/[0.05] p-2">
-        <div className="flex items-center gap-2">
-          <div className="flex h-5 w-5 items-center justify-center rounded-md bg-success/15 ring-1 ring-success/40">
-            <ShieldCheck className="h-2.5 w-2.5 text-success" strokeWidth={3} />
+      {/* Verified District Pulse - Compact */}
+      <div className="relative mt-3.5 overflow-hidden rounded-xl border border-success/30 bg-success/[0.06] p-2.5">
+        <div className="flex items-center gap-2.5">
+          <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-success/15 ring-1 ring-success/40">
+            <ShieldCheck className="h-3.5 w-3.5 text-success" strokeWidth={2.75} />
           </div>
-          <div className="flex-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[9px] font-extrabold uppercase tracking-wider text-success">Verified District Pulse</span>
-              <span className="text-[13px] font-extrabold text-success tabular-nums">{issue.pulse}%</span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-success">
+                Verified District Pulse
+              </span>
+              <span className="text-[15px] font-extrabold text-success tabular-nums">
+                {issue.pulse}%
+              </span>
             </div>
-            <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-muted/60 flex">
-              <div className="bg-success" style={{ width: `${issue.pulse}%` }} />
-              <div className="bg-destructive" style={{ width: `${100 - issue.pulse}%` }} />
+
+            {/* Stacked Yes + No bar */}
+            <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-success/15 flex">
+              <div className="bg-success transition-all duration-700" style={{ width: `${issue.pulse}%` }} />
+              <div className="bg-destructive transition-all duration-700" style={{ width: `${100 - issue.pulse}%` }} />
             </div>
-            <div className="mt-0.5 flex justify-between text-[8px] font-semibold">
+
+            {/* Yes / No percentages */}
+            <div className="mt-1 flex justify-between text-[9.5px] font-bold tabular-nums">
               <span className="text-success">Yes {issue.pulse}%</span>
               <span className="text-destructive">No {100 - issue.pulse}%</span>
             </div>
@@ -250,37 +230,50 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         </div>
       </div>
 
-      {/* Vote buttons */}
-      {phase !== "done" ? (
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          <button onClick={() => castVote("yes")} disabled={phase === "pop"} className={cn("relative flex h-11 flex-col items-center justify-center gap-0.5 rounded-xl text-[12px] font-extrabold tracking-wider transition-all duration-300 active:scale-[0.96] overflow-visible", phase === "pop" && vote === "yes" ? "bg-success !text-background ring-2 ring-success scale-[1.12] z-10" : "bg-success/15 text-success ring-1 ring-success/30 hover:bg-success/25 hover:ring-success/50 active:bg-success/35")}>
-            <Check className="h-[17px] w-[17px]" strokeWidth={3} /> YES
-          </button>
-          <button onClick={() => castVote("unsure")} disabled={phase === "pop"} className={cn("relative flex h-11 flex-col items-center justify-center gap-0.5 rounded-xl text-[12px] font-extrabold tracking-wider transition-all duration-300 active:scale-[0.96] overflow-visible", phase === "pop" && vote === "unsure" ? "bg-zinc-500 !text-background ring-2 ring-zinc-400 scale-[1.12] z-10" : "bg-surface text-muted-foreground ring-1 ring-border/60 hover:text-foreground hover:bg-accent active:bg-accent/80")}>
-            <HelpCircle className="h-[17px] w-[17px]" strokeWidth={3} /> UNSURE
-          </button>
-          <button onClick={() => castVote("no")} disabled={phase === "pop"} className={cn("relative flex h-11 flex-col items-center justify-center gap-0.5 rounded-xl text-[12px] font-extrabold tracking-wider transition-all duration-300 active:scale-[0.96] overflow-visible", phase === "pop" && vote === "no" ? "bg-destructive !text-background ring-2 ring-destructive scale-[1.12] z-10" : "bg-destructive/15 text-destructive ring-1 ring-destructive/30 hover:bg-destructive/25 hover:ring-destructive/50 active:bg-destructive/35")}>
-            <X className="h-[17px] w-[17px]" strokeWidth={3} /> NO
-          </button>
-        </div>
-      ) : (
-        <div className="mt-4 space-y-2">
-          <div className="fade-up flex items-center justify-center gap-2 rounded-xl border border-success/40 bg-success/15 px-3 py-2.5 text-[12px] font-bold text-success shadow-[0_0_24px_-8px_oklch(0.72_0.21_148/55%)]">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-success text-background" style={{ animation: "votePop 700ms cubic-bezier(.2,1.4,.4,1) both" }}>
-              <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={3} />
-            </span>
-            Vote Recorded
-          </div>
-          <div className="flex items-center justify-between text-[11px] font-bold tabular-nums">
-            <span className="text-success">YES {yesPct}%</span>
-            <span className="text-muted-foreground">UNSURE {Math.max(0, 100 - yesPct - noPct)}%</span>
-            <span className="text-destructive">NO {noPct}%</span>
-          </div>
-          <div className="flex h-2 overflow-hidden rounded-full bg-muted/70">
-            <div className="bg-success transition-all duration-700" style={{ width: `${yesPct}%` }} />
-            <div className="bg-destructive transition-all duration-700" style={{ width: `${noPct}%` }} />
-            <div className="bg-muted-foreground/40 transition-all duration-700" style={{ width: `${Math.max(0, 100 - yesPct - noPct)}%` }} />
-          </div>
+      {/* Voting buttons */}
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        <button 
+          onClick={() => castVote("yes")} 
+          disabled={voted}
+          className={cn(
+            "flex items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-extrabold transition-all active:scale-[0.97]",
+            vote === "yes" 
+              ? "border-success bg-success text-white shadow-[0_0_0_3px_rgba(16,185,129,0.2)]" 
+              : "border-success/40 bg-success/5 text-success hover:bg-success/10"
+          )}
+        >
+          <Check className="h-4 w-4" strokeWidth={3} /> YES
+        </button>
+        <button 
+          onClick={() => castVote("unsure")} 
+          disabled={voted}
+          className={cn(
+            "flex items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-extrabold transition-all active:scale-[0.97]",
+            vote === "unsure" 
+              ? "border-primary bg-primary text-white shadow-[0_0_0_3px_rgba(59,130,246,0.2)]" 
+              : "border-primary/40 bg-primary/5 text-primary hover:bg-primary/10"
+          )}
+        >
+          <HelpCircle className="h-4 w-4" strokeWidth={2.5} /> UNSURE
+        </button>
+        <button 
+          onClick={() => castVote("no")} 
+          disabled={voted}
+          className={cn(
+            "flex items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-extrabold transition-all active:scale-[0.97]",
+            vote === "no" 
+              ? "border-destructive bg-destructive text-white shadow-[0_0_0_3px_rgba(239,68,68,0.2)]" 
+              : "border-destructive/40 bg-destructive/5 text-destructive hover:bg-destructive/10"
+          )}
+        >
+          <X className="h-4 w-4" strokeWidth={3} /> NO
+        </button>
+      </div>
+
+      {/* Success state */}
+      {phase === "done" && (
+        <div className="mt-3 rounded-2xl border border-success/40 bg-success/10 px-4 py-2.5 text-center text-[12px] font-bold text-success">
+          Your vote was recorded. Thank you for making your voice heard.
         </div>
       )}
     </article>
