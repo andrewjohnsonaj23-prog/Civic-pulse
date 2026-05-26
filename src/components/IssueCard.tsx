@@ -223,11 +223,11 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         {issue.momentumText && (
           <span className="inline-flex items-center gap-1 rounded-full bg-surface/70 px-2.5 py-1 text-[10.5px] font-semibold text-muted-foreground ring-1 ring-border/50">
             <span className="h-1.5 w-1.5 rounded-full bg-primary/70" /> {issue.momentumText}
-        </span>
-      )}
+          </span>
+        )}
       </div>
 
-      {/* Verified District Pulse - Smaller */}
+      {/* Verified District Pulse - Compact with Yes/No stacked bar */}
       <div className="relative mt-4 overflow-hidden rounded-xl border border-success/30 bg-success/[0.06] p-2.5">
         <div className="flex items-center gap-2.5">
           <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-success/15 ring-1 ring-success/40">
@@ -242,14 +242,28 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
                 {issue.pulse}%
               </span>
             </div>
-            <p className="text-[10px] leading-tight text-muted-foreground/80">
+            <p className="text-[9.5px] leading-tight text-muted-foreground/80">
               support among verified voters in your district
             </p>
-            <div className="relative mt-1.5 h-1 overflow-hidden rounded-full bg-success/15">
+
+            {/* Stacked Yes / No bar */}
+            <div className="mt-2 flex h-2.5 w-full overflow-hidden rounded-full bg-muted/60">
+              {/* Green - Yes */}
               <div 
-                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-success/70 via-success to-success/70" 
+                className="bg-success transition-all duration-700" 
                 style={{ width: `${issue.pulse}%` }} 
               />
+              {/* Red - No */}
+              <div 
+                className="bg-destructive transition-all duration-700" 
+                style={{ width: `${100 - issue.pulse}%` }} 
+              />
+            </div>
+
+            {/* Small labels under bar */}
+            <div className="mt-0.5 flex justify-between text-[9px] font-semibold tabular-nums">
+              <span className="text-success">Yes {issue.pulse}%</span>
+              <span className="text-destructive">No {100 - issue.pulse}%</span>
             </div>
           </div>
         </div>
