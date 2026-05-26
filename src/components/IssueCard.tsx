@@ -84,7 +84,7 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
           WHAT YOU'RE VOTING ON
         </div>
         <p className="text-[13px] leading-snug text-foreground/90">
-          {whyText}
+          {issue.title}
         </p>
       </div>
 
@@ -119,7 +119,7 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
         <span className="text-xs text-muted-foreground">{showProsCons ? "−" : "+"}</span>
       </button>
       {showProsCons && (
-        <div className="mt-1.5 grid grid-cols-1 gap-2">
+        <div className="mt-1.5 grid grid-cols-2 gap-3">
           <div className="rounded-xl border border-success/30 bg-success/5 p-3">
             <div className="mb-1 text-[11px] font-extrabold text-success">PROS</div>
             <ul className="space-y-1 text-[12.5px] text-foreground/85">
