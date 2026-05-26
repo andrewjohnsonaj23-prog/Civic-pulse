@@ -174,7 +174,7 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
           onClick={() => setShowProsCons(v => !v)}
           className="flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/40 px-3 py-2 text-left text-[11px] font-bold tracking-tight text-muted-foreground hover:text-foreground active:bg-surface/70"
         >
-          <span>Pros & Cons (tap to expand)</span>
+          <span><span className="text-success font-extrabold">Pros</span> & <span className="text-destructive font-extrabold">Cons</span> (tap to expand)</span>
           <span className={cn("transition-transform", showProsCons && "rotate-180")}>▼</span>
         </button>
 
