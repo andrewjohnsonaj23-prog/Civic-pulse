@@ -167,12 +167,12 @@ export function IssueCard({ issue, onVoted, trendingLabel, whyHere, aiRecommende
         )}
       </div>
 
-      {/* Pros & Cons — COLLAPSED BY DEFAULT (Strong Green / Red theme) */}
+      {/* Pros & Cons — COLLAPSED BY DEFAULT (matching header style) */}
       <div className="mt-4">
         <button
           type="button"
           onClick={() => setShowProsCons(v => !v)}
-          className="flex w-full items-center justify-between rounded-xl border border-border/60 bg-surface/40 px-3 py-2 text-left text-[11px] font-bold tracking-tight text-muted-foreground hover:text-foreground active:bg-surface/70"
+          className="flex w-full items-center justify-between rounded-xl border border-primary/30 bg-primary/[0.06] px-3 py-2 text-left text-[11px] font-bold tracking-tight text-primary/90 hover:bg-primary/[0.1] active:bg-primary/[0.12]"
         >
           <span><span className="text-success font-extrabold">Pros</span> & <span className="text-destructive font-extrabold">Cons</span> (tap to expand)</span>
           <span className={cn("transition-transform", showProsCons && "rotate-180")}>▼</span>
