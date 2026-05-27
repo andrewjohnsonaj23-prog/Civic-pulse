@@ -2,7 +2,9 @@
 // === AI CURATOR SERVICE (Living Intelligence Layer) ===
 // This is where Grok will eventually operate as the brain of CivicPulse
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.detectEmergingTopics = exports.analyzeIssues = exports.reScoreIssue = void 0;
+exports.reScoreIssue = reScoreIssue;
+exports.analyzeIssues = analyzeIssues;
+exports.detectEmergingTopics = detectEmergingTopics;
 const relevance_1 = require("./relevance");
 /**
  * Re-score a single issue and generate meaningful reasoning.
@@ -51,7 +53,6 @@ function reScoreIssue(issue, context) {
         confidence: context ? 80 : 65,
     };
 }
-exports.reScoreIssue = reScoreIssue;
 /**
  * Analyze multiple issues at once.
  */
@@ -68,7 +69,6 @@ function analyzeIssues(issues, context) {
         results,
     };
 }
-exports.analyzeIssues = analyzeIssues;
 /**
  * Detect emerging topics (placeholder for future real signals).
  */
@@ -79,4 +79,3 @@ function detectEmergingTopics(signals) {
     }
     return topics;
 }
-exports.detectEmergingTopics = detectEmergingTopics;

@@ -7,7 +7,7 @@
 // - Re-score them using the AI Curator
 // - (Later) update scores in the database
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scoreRefreshJob = void 0;
+exports.scoreRefreshJob = scoreRefreshJob;
 const aiCurator_1 = require("../services/aiCurator");
 // Temporary mock issues (we will replace this with real data later)
 const MOCK_ISSUES = [
@@ -61,4 +61,3 @@ async function scoreRefreshJob() {
     // 4. Log what changed
     console.log('✅ [scoreRefreshJob] Score refresh completed.');
 }
-exports.scoreRefreshJob = scoreRefreshJob;

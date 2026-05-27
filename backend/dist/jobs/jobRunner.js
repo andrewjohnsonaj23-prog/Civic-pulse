@@ -9,7 +9,7 @@
 // - A cron scheduler
 // - Event-driven triggers
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runJob = void 0;
+exports.runJob = runJob;
 const index_1 = require("./index");
 async function runJob(jobName) {
     const job = index_1.jobs[jobName];
@@ -26,4 +26,3 @@ async function runJob(jobName) {
         throw error;
     }
 }
-exports.runJob = runJob;
