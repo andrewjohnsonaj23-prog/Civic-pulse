@@ -57,7 +57,7 @@ export function IssueCard({ issue, onVoted, aiRecommended = false }: {
       {/* Top bubbles */}
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <div 
-          className="inline-flex items-center rounded-full px-3 py-0.5 text-[10px] font-extrabold tracking-[0.5px] text-white"
+          className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-extrabold tracking-wider" style={{ backgroundColor: catColor + "15", borderColor: catColor + "40", color: catColor }}
           style={{ backgroundColor: catColor }}
         >
           {category.toUpperCase()}

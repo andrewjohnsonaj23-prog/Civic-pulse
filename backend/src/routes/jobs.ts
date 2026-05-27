@@ -3,10 +3,9 @@ import { runJob } from '../jobs/jobRunner';
 
 const router = Router();
 
-// Manual trigger endpoint (great for development & testing)
-router.post('/trigger/:jobName', async (req, res) => {
+// Accepts both GET and POST so you can test easily from the browser
+router.all('/trigger/:jobName', async (req, res) => {
   const { jobName } = req.params;
-
   try {
     await runJob(jobName as any);
     res.json({

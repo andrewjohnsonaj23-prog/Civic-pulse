@@ -1,76 +1,72 @@
-// =====================================================
-// AI CURATOR (Living Intelligence Layer)
-// =====================================================
-// This is the future home of the real AI system (Grok).
-//
-// Current Responsibilities:
-// - Re-score issues based on real-world relevance
-// - Detect emerging topics from external signals (future)
-//
-// This file will eventually contain calls to Grok for reasoning.
-// =====================================================
+// === AI CURATOR SERVICE (Living Intelligence Layer) ===
+// This is where Grok will eventually operate as the brain of CivicPulse
 
-import { Issue } from '../types/issue';
 import { relevanceScore } from './relevance';
 
-export interface AIAnalysisResult {
+export interface AnalysisResult {
   issueId: string;
   newScore: number;
-  reasoning: string;
-  confidence: number; // 0–100
-  suggestedAction: 'boost' | 'add' | 'monitor' | 'ignore' | 'merge';
+  reason: string;
+  confidence: number; // 0-100
 }
 
 /**
- * Re-score an issue using the backend relevance engine + optional real-world context.
- * This is the core function that will be enhanced when we connect live signals.
+ * Re-score a single issue and generate meaningful reasoning.
  */
-export function reScoreIssue(issue: Issue, context?: string): AIAnalysisResult {
-  // Base score from our existing relevance engine
+export function reScoreIssue(issue: any, context?: string): AnalysisResult {
   const baseScore = relevanceScore(issue);
-
-  // Placeholder for future AI adjustment based on real-world signals
-  // When we connect news/X/government data, this score will be intelligently adjusted here.
   let adjustedScore = baseScore;
+  const reasons: string[] = [];
 
-  let reasoning = "Scored using backend relevance engine.";
-
-  if (context) {
-    // In the future, this is where Grok will analyze the context and adjust the score
-    reasoning = `Re-scored with external context: ${context}`;
-    adjustedScore = Math.min(10000, baseScore + 300); // Small boost for now
+  // Build intelligent reasoning based on issue properties
+  if (issue.urgency === "critical") {
+    reasons.push("Critical urgency applied strong boost");
+  } else if (issue.urgency === "high") {
+    reasons.push("High urgency contributed to elevated score");
   }
+
+  if ((issue.momentum ?? 0) > 1000) {
+    reasons.push("Strong recent momentum increased ranking");
+  } else if ((issue.momentum ?? 0) > 500) {
+    reasons.push("Moderate momentum supported score");
+  }
+
+  if (issue.big) {
+    reasons.push("National-level impact recognized");
+  }
+
+  if (issue.scope === "district") {
+    reasons.push("Local district relevance prioritized");
+  } else if (issue.scope === "state") {
+    reasons.push("State-wide relevance factored in");
+  } else if (issue.scope === "federal") {
+    reasons.push("Federal scope applied");
+  }
+
+  if (issue.momentumText) {
+    reasons.push("Active real-world traction detected");
+  }
+
+  // Fallback if no strong signals
+  if (reasons.length === 0) {
+    reasons.push("Baseline relevance scoring applied");
+  }
+
+  const finalReason = reasons.join(" + ");
 
   return {
     issueId: issue.id,
     newScore: adjustedScore,
-    reasoning,
-    confidence: context ? 70 : 60,
-    suggestedAction: context ? "boost" : "monitor",
+    reason: finalReason,
+    confidence: context ? 80 : 65,
   };
 }
 
 /**
- * Detect emerging topics from external signals.
- * Currently a placeholder. Will later analyze news, X posts, government activity, etc.
+ * Analyze multiple issues at once.
  */
-export function detectEmergingTopics(signals: any[]): string[] {
-  const topics: string[] = [];
-
-  if (signals.length > 0) {
-    // Placeholder logic — real implementation will use Grok reasoning
-    topics.push("Emerging topic detection ready for real signals");
-  }
-
-  return topics;
-}
-
-/**
- * Main entry point for analyzing multiple issues.
- * Can be triggered manually, by API, or by future scheduled jobs.
- */
-export function analyzeIssues(issues: Issue[], context?: string) {
-  const results: AIAnalysisResult[] = [];
+export function analyzeIssues(issues: any[], context?: string) {
+  const results: AnalysisResult[] = [];
 
   for (const issue of issues) {
     const result = reScoreIssue(issue, context);
@@ -80,7 +76,18 @@ export function analyzeIssues(issues: Issue[], context?: string) {
   return {
     analyzedAt: new Date().toISOString(),
     totalAnalyzed: results.length,
-    contextUsed: context || null,
+    contextUsed: context || "None",
     results,
   };
+}
+
+/**
+ * Detect emerging topics (placeholder for future real signals).
+ */
+export function detectEmergingTopics(signals: any[]): string[] {
+  const topics: string[] = [];
+  if (signals.length > 0) {
+    topics.push("Emerging topic detection system is initialized");
+  }
+  return topics;
 }

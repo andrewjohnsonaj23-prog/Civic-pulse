@@ -7,7 +7,30 @@ import { ISSUES, USER, CATEGORY_ORDER, type Scope } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+// === RELEVANCE ENGINE (AI-powered feed ranking) ===
+const relevanceScore = (i: any) => {
+  let score = 0;
 
+  // Urgency
+  if (i.urgency === "critical") score += 2800;
+  else if (i.urgency === "high") score += 1400;
+  else if (i.urgency === "medium") score += 500;
+
+  // Momentum
+  score += (i.momentum ?? 0) * 1.6;
+
+  // Breaking news traction
+  if (i.momentumText) score += 1100;
+
+  // Big national impact
+  if (i.big) score += 2000;
+
+  // Personal scope relevance
+  if (i.scope === "district") score += 900;
+  else if (i.scope === "local") score += 300;
+
+  return Math.round(score);
+};
 export const Route = createFileRoute("/_tabs/")({
   component: IssuesFeed,
   head: () => ({

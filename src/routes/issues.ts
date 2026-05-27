@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { relevanceScore } from '../services/relevance';
-import { analyzeIssues } from '../services/aiCurator';
+import { analyzeIssues, reScoreIssue } from '../services/aiCurator';
 
 const router = Router();
 
@@ -58,14 +58,37 @@ router.get('/my-feed', (req, res) => {
   });
 });
 
-// NEW: AI Analysis endpoint (for testing the AI Curator)
+// NEW: Test endpoint to trigger the AI Curator
 router.get('/analyze', (req, res) => {
-  const result = analyzeIssues(MOCK_ISSUES, "Testing AI Curator integration");
+  const context = req.query.context as string | undefined;
+
+  const results = analyzeIssues(MOCK_ISSUES, context);
 
   res.json({
     success: true,
-    message: "AI analysis completed",
-    ...result,
+    message: "AI Curator analysis complete",
+    contextUsed: context || null,
+    ...results,
+  });
+});
+
+// NEW: Analyze a single issue (useful for testing)
+router.get('/analyze/:id', (req, res) => {
+  const issueId = req.params.id;
+  const context = req.query.context as string | undefined;
+
+  const issue = MOCK_ISSUES.find(i => i.id === issueId);
+
+  if (!issue) {
+    return res.status(404).json({ success: false, message: "Issue not found" });
+  }
+
+  const result = reScoreIssue(issue, context);
+
+  res.json({
+    success: true,
+    message: "Single issue analyzed by AI Curator",
+    result,
   });
 });
 
