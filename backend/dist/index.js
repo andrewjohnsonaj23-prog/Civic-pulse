@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const issues_1 = __importDefault(require("./routes/issues"));
 const jobs_1 = __importDefault(require("./routes/jobs"));
+const votes_1 = __importDefault(require("./routes/votes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = Number(process.env.PORT) || 3001;
@@ -21,6 +22,7 @@ process.on('unhandledRejection', (reason) => {
 });
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+app.use('/api/votes', votes_1.default);
 app.get('/health', (req, res) => {
     res.json({
         status: 'ok',

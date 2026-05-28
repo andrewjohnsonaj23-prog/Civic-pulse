@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import issuesRouter from './routes/issues';
 import jobsRouter from './routes/jobs';
+import votesRouter from './routes/votes';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ process.on('unhandledRejection', (reason) => {
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/votes', votesRouter);
 
 app.get('/health', (req, res) => {
   res.json({ 
